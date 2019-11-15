@@ -8,6 +8,8 @@ the implement control application which:
 * generates the ISO 11783 binary presentation
 * and loads it to the virtual terminal.
 
+![Virtual terminal](virtualterminal.jpg)
+
 Because the XML file is parsed at run-time when the VT properties are
 known, the PoolEdit parser can resize the GUI objects and reduce the
 number of colors accordingly. Another benefit of the XML format is
@@ -15,7 +17,7 @@ that it allows the use of symbolic names for referencing the GUI
 objects.  The symbolic names are easier to remember than numeric IDs
 used in the binary object pool format.
 
-![Parser in terminal window](parserterminal.png)
+![Parser in xterm window](parserxterm.png)
 
 Current development environment:
 * OS: Windows 7
