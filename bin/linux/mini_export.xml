@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objectpool dimension="200" fix_bitmap_path="c:\pooledit\images\" sk_height="32" sk_width="60" std_bitmap_path="c:\pooledit\images\">
+   <workingset active_mask="" background_colour="white" id="256" name="workingset" selectable="yes">
+      <include_object id="257" name="datamask" role="active_mask"/>
+   </workingset>
+   <datamask background_colour="white" id="257" name="datamask" soft_key_mask="">
+      <include_object id="260" name="softkeymask" role="soft_key_mask"/>
+      <outputstring background_colour="black" font_attributes="" height="20" horizontal_justification="left" id="258" language="" length="7" name="label0" options="transparent" pos_x="75" pos_y="83" value="Testing" variable_reference="" width="61">
+        <fontattributes font_colour="black" font_size="6x8" font_style="normal" font_type="latin1" id="259" language="" name="white6x8" pos_x="0" pos_y="0" role="font_attributes"/>
+      </outputstring>
+   </datamask>
+   <softkeymask background_colour="white" id="260" name="softkeymask"/>
+   <fontattributes font_colour="black" font_size="6x8" font_style="normal" font_type="latin1" id="261" language="" name="fontattributes6x8"/>
+   <lineattributes id="262" line_art="1111111111111111" line_colour="black" line_width="1" name="lineattributes"/>
+</objectpool>
