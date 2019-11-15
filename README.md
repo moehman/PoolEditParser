@@ -1,8 +1,9 @@
 # PoolEditParser
 
-Parser for reading PoolEdit XML files and writing binary ISOBUS object
-pools. This parser is a part of the implement control application
-which:
+Parser for reading [PoolEdit](https://github.com/moehman/PoolEdit) XML
+files and writing binary ISOBUS object pools. This parser is a part of
+the implement control application which:
+
 * reads the XML document
 * generates the ISO 11783 binary presentation
 * and loads it to the virtual terminal.
