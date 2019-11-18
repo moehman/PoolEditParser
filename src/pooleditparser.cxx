@@ -27,6 +27,8 @@
 #include "parser.h"
 #include "xml.h"
 
+#define VERSION "1.5.0"
+
 // linked list node
 struct node {
     char *head;
@@ -155,7 +157,8 @@ void starts(void *userData, char *el, const char ** attr)
 //
 // callback function
 //
-void ends(void *userData, char *el) {
+void ends(void *userData, char *el)
+{
     (void) userData;
     (void) el;
     depth--;
@@ -164,9 +167,10 @@ void ends(void *userData, char *el) {
 //
 // function for printing usage information on stdout
 //
-void printUseage() {
+void printUseage()
+{
     printf("Usage: pooleditparser xml-filename output-filename -d=[dimension] "
-           "-sw=[softkey width] -sh=[softkey height] -c=[colors] [-table]\n");
+           "-sw=[softkey width] -sh=[softkey height] -c=[colors] [-table] [-v]\n");
 }
 
 //
@@ -183,6 +187,13 @@ int main(int argc, char *argv[])
     int skHeight = 32;
     int colors = 256;
 
+    for (int i = 0; i < argc; i++) {
+	if (strncmp("-v", argv[i], 2) == 0) {
+	    printf("version: %s\n", VERSION);
+	    exit(0);
+	}
+    }
+    
     // check arguments
     if (argc < 3) {
         printUseage();
