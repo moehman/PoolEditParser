@@ -19,6 +19,8 @@ used in the binary object pool format.
 
 ![Parser in xterm window](parserxterm.png)
 
+Please read the manual for more information!
+
 Current development environment:
 * OS: Windows 7
 * IDE: Dev-C++ 5.11 (2015-04-27)
