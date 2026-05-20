@@ -127,6 +127,7 @@ int getFontType(const char **attrs);
 int getEllipseType(const char **attrs);
 int getPolygonType(const char **attrs);
 int getFunctionType(const char **attrs);
+int getFunctionAttributes(const char **attrs);
 
 // returns the value-attribute as string, that is given length given
 // string must be freed!

@@ -251,7 +251,16 @@ int getRealSize(void *object) {
             AuxiliaryInput *auxiliaryInput = (AuxiliaryInput *) object;
             return sizeof(AuxiliaryInput) + auxiliaryInput->objects * sizeof(ObjectReference);
         }
-
+    case 31:
+        {
+            AuxiliaryFunction2 *auxiliaryFunction2 = (AuxiliaryFunction2 *) object;
+            return sizeof(AuxiliaryFunction2) + auxiliaryFunction2->objects * sizeof(ObjectReference);
+        }
+    case 32:
+        {
+            AuxiliaryInput2 *auxiliaryInput2 = (AuxiliaryInput2 *) object;
+            return sizeof(AuxiliaryInput2) + auxiliaryInput2->objects * sizeof(ObjectReference);
+        }
     }
     return -1;
 }
@@ -351,6 +360,16 @@ void addObjectReference(void **object, ObjectReference objectReference, int role
             OBJECTS_PLUS_PLUS(AuxiliaryInput, *object);
             break;
 
+        case 31:
+            startIndex = OBJECT_INDEX(AuxiliaryFunction2, *object);
+            OBJECTS_PLUS_PLUS(AuxiliaryFunction2, *object);
+            break;
+
+        case 32:
+            startIndex = OBJECT_INDEX(AuxiliaryInput2, *object);
+            OBJECTS_PLUS_PLUS(AuxiliaryInput2, *object);
+            break;
+	    
         default:
             error = 1;
             break;
@@ -948,6 +967,7 @@ void *createObject(int type, const char **attr){
             INIT_OBJECT(FillAttributes, fillAttributes);
             fillAttributes->fillType = getFillType(attr);
             fillAttributes->fillColor = getFillColor(attr, vtColors);
+	    fillAttributes->fillPattern = 0xFFFF;
             return fillAttributes;
         }
     case 26: // InputAttributes
@@ -991,6 +1011,23 @@ void *createObject(int type, const char **attr){
             auxiliaryInput->inputId = getInputID(attr);
             return auxiliaryInput;
         }
+
+    case 31:
+        {
+            INIT_OBJECT(AuxiliaryFunction2, auxiliaryFunction2);
+            auxiliaryFunction2->backgroundColor = getBackgroundColor(attr, vtColors);
+            auxiliaryFunction2->functionAttributes = getFunctionAttributes(attr);
+            return auxiliaryFunction2;
+        }
+    case 32:
+        {
+            INIT_OBJECT(AuxiliaryInput2, auxiliaryInput2);
+            auxiliaryInput2->backgroundColor = getBackgroundColor(attr, vtColors);
+            auxiliaryInput2->functionAttributes = getFunctionAttributes(attr);
+//          auxiliaryInput2->inputId = getInputID(attr);
+            return auxiliaryInput2;
+        }
+
     default:
         printf("ERROR. Object %i not implemented yet!\n", type);
         return NULL;
@@ -1358,7 +1395,7 @@ void start(void *data, const char *el, const char **attr) {
 
     // check if element is an ISOBUS object - if so, get the type
     int type = -1;
-    for (int i = 0; i <= 30; i++)
+    for (int i = 0; i <= 32; i++)
         if (strcmp(xmlNames[i], el) == 0)
             type = i;
 
@@ -1480,7 +1517,7 @@ void end(void *data, const char *el) {
         dataLength = 0;
     }
     int type = -1;
-    for (int i = 0; i <= 30; i++)
+    for (int i = 0; i <= 32; i++)
         if (strcmp(xmlNames[i], el) == 0)
             type = i;
 

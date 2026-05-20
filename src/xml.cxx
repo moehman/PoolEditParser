@@ -39,7 +39,7 @@ float atof2(char *str)
 {
     //check for empty string
     if (str == NULL || str[0] == 0)
-	return 0.0f;
+        return 0.0f;
 
     return atof(str);
 }
@@ -61,8 +61,8 @@ char *str_dup(const char *p)
     size_t len = strlen(p);
     char *rv = (char *) malloc(len + 1);
     if (rv == NULL) {
-	fprintf(stderr, "malloc failed!\n");
-	exit(1);
+        fprintf(stderr, "malloc failed!\n");
+        exit(1);
     }
     strcpy(rv, p);
     return rv;
@@ -114,7 +114,7 @@ char *getAttributeLatin1(const char **attrs, const char *name)
 {
     char *value = getAttribute(attrs, name);
     if (value == NULL)
-	return NULL;
+        return NULL;
     char *rv = str_dup(value);
     return utf8toLatin1Str(rv);
 }
@@ -146,9 +146,9 @@ int isName(const char **attrs, const char *name)
 // returns the value of id-attribute
 int getId(const char **attrs)
 {
-    char attr[] = "id";
-    char *value = getAttribute(attrs, attr);
-    return atoi2(value);
+    char *id = getAttribute(attrs, "id");
+    if (!id) return 0xFFFF;
+    return atoi2(id);
 }
 
 // returns the value of pos_x-attribute
@@ -216,10 +216,10 @@ int getRole(const char **attrs)
 int getColor(const char **attrs, const char *name)
 {
     static const char *colors[] =
-	{"black", "white", "green", "teal",
-	 "maroon", "purple", "olive", "silver",
-	 "grey", "blue", "lime", "cyan",
-	 "red", "magenta", "yellow", "navy"};
+        {"black", "white", "green", "teal",
+         "maroon", "purple", "olive", "silver",
+         "grey", "blue", "lime", "cyan",
+         "red", "magenta", "yellow", "navy"};
 
     char *value = getAttribute(attrs, name);
     for (int i = 0; i < 16; i++)
@@ -233,38 +233,38 @@ int reduceColor(int color, int colors)
 {
     // these tables tell what is the nearest color
     unsigned char Colors256to16[] =
-	{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	 0, 0, 15, 15, 9, 9, 0, 0, 15, 15, 9, 9, 2, 2, 3, 3,
-	 3, 9, 2, 2, 3, 3, 3, 3,  2, 2, 3, 3, 3, 11, 10, 10,
-	 10, 3, 11, 11, 0, 0, 15, 15, 9, 9, 0, 0, 15, 15, 9, 9,
-	 2, 2, 3, 3, 3, 9, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3,
-	 3, 11, 10, 10, 10, 3, 11, 11, 4, 4, 5, 5, 5, 9, 4, 4,
-	 5, 5, 5, 9, 6, 6, 8, 8, 8, 8, 6, 6, 8, 8, 8, 8,
-	 6, 6, 8, 8, 7, 7, 10, 10, 8, 8, 7, 11, 4, 4, 5, 5,
-	 5, 5, 4, 4, 5, 5, 5, 5, 6, 6, 8, 8, 8, 8, 6, 6,
-	 8, 8, 8, 8, 6, 6, 8, 8, 7, 7, 6, 6, 8, 8, 7, 1,
-	 4, 4, 5, 5, 5, 13, 4, 4, 5, 5, 5, 13, 6, 6, 8, 8,
-	 7, 7, 6, 6, 8, 8, 7, 7, 6, 6, 7, 7, 7, 7, 14, 14,
-	 7, 7, 7, 1, 12, 12, 12, 5, 13, 13, 12, 12, 12, 5, 13, 13,
-	 12, 12, 8, 8, 7, 13, 6, 6, 8, 8, 7, 1, 14, 14, 7, 7,
-	 7, 1, 14, 14, 14, 1, 1, 1};
+        {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+         0, 0, 15, 15, 9, 9, 0, 0, 15, 15, 9, 9, 2, 2, 3, 3,
+         3, 9, 2, 2, 3, 3, 3, 3,  2, 2, 3, 3, 3, 11, 10, 10,
+         10, 3, 11, 11, 0, 0, 15, 15, 9, 9, 0, 0, 15, 15, 9, 9,
+         2, 2, 3, 3, 3, 9, 2, 2, 3, 3, 3, 3, 2, 2, 3, 3,
+         3, 11, 10, 10, 10, 3, 11, 11, 4, 4, 5, 5, 5, 9, 4, 4,
+         5, 5, 5, 9, 6, 6, 8, 8, 8, 8, 6, 6, 8, 8, 8, 8,
+         6, 6, 8, 8, 7, 7, 10, 10, 8, 8, 7, 11, 4, 4, 5, 5,
+         5, 5, 4, 4, 5, 5, 5, 5, 6, 6, 8, 8, 8, 8, 6, 6,
+         8, 8, 8, 8, 6, 6, 8, 8, 7, 7, 6, 6, 8, 8, 7, 1,
+         4, 4, 5, 5, 5, 13, 4, 4, 5, 5, 5, 13, 6, 6, 8, 8,
+         7, 7, 6, 6, 8, 8, 7, 7, 6, 6, 7, 7, 7, 7, 14, 14,
+         7, 7, 7, 1, 12, 12, 12, 5, 13, 13, 12, 12, 12, 5, 13, 13,
+         12, 12, 8, 8, 7, 13, 6, 6, 8, 8, 7, 1, 14, 14, 7, 7,
+         7, 1, 14, 14, 14, 1, 1, 1};
 
     unsigned char Colors256to2[] =
-	{0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0,
-	 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1,
-	 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-	 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1,
-	 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-	 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0,
-	 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1,
-	 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1,
-	 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	 1, 1, 1, 1, 1, 1, 1, 1};
+        {0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0,
+         0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1,
+         1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1,
+         0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+         0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0,
+         1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+         0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1,
+         1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+         1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1,
+         0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+         1, 1, 1, 1, 1, 1, 1, 1};
 
     if (colors == 256)
         return color;
@@ -411,13 +411,54 @@ int getFillType(const char **attrs) {
 }
 
 int getFunctionType(const char **attrs) {
-    static const char *types[] = {"boolean", "analog"};
+    static const char *types[] = {"boolean", "analog", "bool-latch-none"};
     char *value = getAttribute(attrs, "function_type");
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
         if (strcmp(types[i], value) == 0 )
             return i;
 
     return atoi2(value);
+}
+
+int getFunctionAttributes(const char **attrs)
+{
+    static const char *types[] = {
+      "bool-latch",                    // 0
+      "analog-return-none",            // 1
+      "bool-latch-none",               // 2
+      "analog-return-50",              // 3
+      "analog-return-0",               // 4
+      "dual-bool-latch-both",          // 5
+      "dual-bool-latch-none",          // 6
+      "dual-bool-latch-up",            // 7
+      "dual-bool-latch-down",          // 8
+      "combined-analog-return-50",     // 9
+      "combined-analog-return-none",   // 10
+      "quadrature-bool-latch-none",    // 11
+      "quadrature-analog-return-none", // 12
+      "quadrature-analog-return-50",   // 13
+      "bidir-encoder"                  // 14
+    };
+    char *value = getAttribute(attrs, "function_attributes_a");
+    int retVal = -1;
+    for (int i = 0; i < 15; i++)
+        if (strcmp(types[i], value) == 0 ) {
+            retVal = i;
+            goto exit_loop;
+        }
+    retVal = 0x1F & atoi2(value);
+
+ exit_loop:
+
+    char *options = getAttribute(attrs, "function_attributes_b");
+    if (strstr(options, "criticalcontrol") != NULL)
+        retVal |= 0x20;
+    if (strstr(options, "assingmentrestriction") != NULL)
+        retVal |= 0x40;
+    if (strstr(options, "singleassignment") != NULL)
+        retVal |= 0x80;
+
+    return retVal;
 }
 
 int getLineDirection(const char **attrs)
@@ -700,10 +741,10 @@ int getNumberFormat(const char **attrs)
 int getFontSize2(const char **attrs, const char *name)
 {
     static const char *fonts[] = {"6x8", "8x8", "8x12",
-				  "12x16", "16x16", "16x24",
-				  "24x32", "32x32", "32x48",
-				  "48x64", "64x64", "64x96",
-				  "96x128", "128x128", "128x192"};
+                                  "12x16", "16x16", "16x24",
+                                  "24x32", "32x32", "32x48",
+                                  "48x64", "64x64", "64x96",
+                                  "96x128", "128x128", "128x192"};
 
     char *value = getAttribute(attrs, name);
     for (int i = 0; i < 15; i++)
@@ -777,7 +818,9 @@ int getSkHeight(const char **attrs)
 // for commands
 int getObjectId(const char **attrs)
 {
-    return atoi2(getAttribute(attrs, "object_id"));
+    char *id = getAttribute(attrs, "object_id");
+    if (!id) return 0xFFFF;
+    return atoi2(id);
 }
 
 int getHideShow(const char **attrs)
@@ -858,7 +901,10 @@ int getAID(const char **attrs)
 
 int getFillPatternID(const char **attrs)
 {
-    return atoi2(getAttribute(attrs, "fill_pattern"));
+    int rv = atoi2(getAttribute(attrs, "fill_pattern"));
+    if (!rv)
+        rv = 0xFFFF;
+    return rv;
 }
 
 int getPosX(const char **attrs)

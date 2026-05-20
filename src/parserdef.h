@@ -534,6 +534,30 @@ typedef struct
     unsigned char  objects;
 } AuxiliaryInput;
 
+typedef struct
+{
+    unsigned short objectId;
+    unsigned char  type;
+
+    unsigned char  backgroundColor;
+    unsigned char  functionAttributes;
+
+    unsigned char  objects;
+} AuxiliaryFunction2;
+
+typedef struct
+{
+    unsigned short objectId;
+    unsigned char  type;
+
+    unsigned char  backgroundColor;
+    unsigned char  functionAttributes;
+//  unsigned char  inputId;
+
+    unsigned char  objects;
+} AuxiliaryInput2;
+
+
 /*********** COMMANDS ***************/
 
 typedef struct
@@ -746,7 +770,9 @@ const char *xmlNames[] =
      "ellipse", "polygon", "meter",  "linearbargraph", "archedbargraph",
      "picturegraphic", "numbervariable", "stringvariable", "fontattributes",
      "lineattributes",  "fillattributes", "inputattributes",
-     "objectpointer", "macro", "auxiliaryfunction", "auxiliaryinput"};
+     "objectpointer", "macro",
+     "auxiliaryfunction", "auxiliaryinput",
+     "auxiliaryfunction2", "auxiliaryinput2"};
 
 
 // commands-array has xml-names of all supported commands

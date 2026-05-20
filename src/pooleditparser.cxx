@@ -27,11 +27,12 @@
 #include "parser.h"
 #include "xml.h"
 
-#define VERSION "1.5.0"
+#define VERSION "1.6.0"
 
 // linked list node
 struct node {
-    char *head;
+    char *name;
+    int id;
     struct node *tail;
 };
 
@@ -50,12 +51,13 @@ int nro_root_objects = 0;
 
 int depth = 0;
 int printTable = false;
+int pythonTable = false;
 int firstByte = true;
 
 //
 // function for adding a new string to the linked list
 //
-void addToList(char *bff)
+void addToList(char *name, int id)
 {
     // allocate and init new node
     node_t *node = (node_t *) malloc(sizeof(node_t));
@@ -63,7 +65,8 @@ void addToList(char *bff)
         printf("out of memory!\n");
         exit(-1);
     }
-    node->head = bff;
+    node->name = name;
+    node->id = id;
     node->tail = NULL;
 
     // add node to list
@@ -84,9 +87,20 @@ void printList()
 {
     node_t *node = list_start;
     while (node != NULL) {
-        fprintf(fileOut, "%s", node->head);
+        fprintf(fileOut, "#define %s %d\n", node->name, node->id);
         node = node->tail;
     }
+}
+
+void pythonList()
+{
+    fprintf(fileOut, "definitions = {\n");
+    node_t *node = list_start;
+    while (node != NULL) {
+        fprintf(fileOut, "    '%s': %d,\n", node->name, node->id);
+        node = node->tail;
+    }
+    fprintf(fileOut, "}\n");
 }
 
 //
@@ -94,15 +108,41 @@ void printList()
 //
 void ascii_ready(char *data, int length)
 {
+    const int obj_id = (length >= 2) ? data[0] + (data[1] << 8) : -1;
+    const int obj_type = (length >= 3) ? data[2] : -1;
+
     for (int i = 0; i < length; i++) {
         if (firstByte) {
             firstByte = false;
+            fprintf(fileOut, "  /* %d, %d */ ", obj_id, obj_type);
+        }
+        else if (i == 0) {
+            fprintf(fileOut, ",\n  /* %d, %d */ ", obj_id, obj_type);
         }
         else {
             fprintf(fileOut, ", ");
-            if (i == 0) {
-                fprintf(fileOut, "\n  ");
-            }
+        }
+        fprintf(fileOut, "%i", (unsigned char) data[i]);
+    }
+    pool_size += length;
+    nro_total_objects++;
+}
+
+void python_ready(char *data, int length)
+{
+    const int obj_id = (length >= 2) ? data[0] + (data[1] << 8) : -1;
+    const int obj_type = (length >= 3) ? data[2] : -1;
+
+    for (int i = 0; i < length; i++) {
+        if (firstByte) {
+            firstByte = false;
+            fprintf(fileOut, "    # %d, %d\n    ", obj_id, obj_type);
+        }
+        else if (i == 0) {
+            fprintf(fileOut, ",\n    # %d, %d\n    ", obj_id, obj_type);
+        }
+        else {
+            fprintf(fileOut, ", ");
         }
         fprintf(fileOut, "%i", (unsigned char) data[i]);
     }
@@ -130,25 +170,13 @@ void starts(void *userData, char *el, const char ** attr)
     (void) userData;
     (void) el;
 
-    char tmp[256];
-    char *bff;
     char *name;
     int id;
-    int len;
 
     if (depth == 1) {
         name = getName(attr);
         id = getId(attr);
-
-        // print string to tmp, allocate bff accordingly and copy
-        // string
-        sprintf(tmp, "#define %s %d\n", name, id);
-        len = strlen(tmp) + 1;
-        bff = (char *) malloc(len);
-        memcpy(bff, tmp, len);
-
-        addToList(bff);
-
+        addToList(strdup(name), id);
         nro_root_objects++;
     }
     depth++;
@@ -188,12 +216,12 @@ int main(int argc, char *argv[])
     int colors = 256;
 
     for (int i = 0; i < argc; i++) {
-	if (strncmp("-v", argv[i], 2) == 0) {
-	    printf("version: %s\n", VERSION);
-	    exit(0);
-	}
+        if (strncmp("-v", argv[i], 2) == 0) {
+            printf("version: %s\n", VERSION);
+            exit(0);
+        }
     }
-    
+
     // check arguments
     if (argc < 3) {
         printUseage();
@@ -234,6 +262,9 @@ int main(int argc, char *argv[])
         else if (strncmp("-table", argv[i], 6) == 0) {
             printTable = true;
         }
+        else if (strncmp("-python", argv[i], 6) == 0) {
+            pythonTable = true;
+        }
         else {
             printUseage();
             exit(-1);
@@ -268,10 +299,16 @@ int main(int argc, char *argv[])
            argv[1], argv[2], dimension, skWidth, skHeight, colors);
 
     if (printTable) {
-        fprintf(fileOut, "unsigned char *pool = {\n  ");
+        fprintf(fileOut, "unsigned char *pool = {\n");
         parse(fileIn, starts, ends, ascii_ready, dimension, skWidth, skHeight, colors);
         fprintf(fileOut, "\n};\n\n#define POOL_SIZE %d\n\n", pool_size);
         printList();
+    }
+    else if (pythonTable) {
+        fprintf(fileOut, "pool = [\n");
+        parse(fileIn, starts, ends, python_ready, dimension, skWidth, skHeight, colors);
+        fprintf(fileOut, "\n]\n\nPOOL_SIZE = %d\n\n", pool_size);
+        pythonList();
     }
     else {
         parse(fileIn, starts, ends, binary_ready, dimension, skWidth, skHeight, colors);
