@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
         exit(-2);
     }
 
-    fileOut = fopen(argv[2], "w");
+    fileOut = fopen(argv[2], "wb");
     if (fileOut == NULL) {
         printf("Can't open file: %s\n", argv[2]);
         exit(-3);
